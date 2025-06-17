@@ -1,0 +1,136 @@
+# --------------------------------------------
+# Retail Data Cleaning - Capstone Project
+# --------------------------------------------
+import pandas as pd
+
+# ------------------------------------------------
+# 1. Store Data Cleaning
+# ------------------------------------------------
+store_path = r"C:\Users\jagad\OneDrive\Documents\ExcellenC\Retail_sales_Capstone\data\raw\stores.csv"
+store_clean_path = r'C:\Users\jagad\OneDrive\Documents\ExcellenC\Retail_sales_Capstone\data\cleaned\stores_cleaned.csv'
+
+df = pd.read_csv(store_path)
+
+# Remove duplicates and missing values
+df.drop_duplicates(inplace=True)
+df.dropna(inplace=True)
+df.dropna(axis=1, inplace=True)  # Drop columns with all NA values
+
+# Clean text columns
+text_columns = ['store_name', 'store_type', 'region', 'city']
+df[text_columns] = df[text_columns].apply(lambda x: x.str.strip().str.title())
+
+# Rename columns
+df.rename(columns={
+    'store_id': 'Store_ID',
+    'store_name': 'Store_Name',
+    'store_type': 'Store_Type',
+    'region': 'Region',
+    'city': 'City',
+    'operating_cost': 'Operating_Cost'
+}, inplace=True)
+
+# Save cleaned file
+df.to_csv(store_clean_path, index=False)
+
+
+# ------------------------------------------------
+# 2. Customer Data Cleaning
+# ------------------------------------------------
+customer_path = r"C:\Users\jagad\OneDrive\Documents\ExcellenC\Retail_sales_Capstone\data\raw\customers.csv"
+customer_clean_path = r'C:\Users\jagad\OneDrive\Documents\ExcellenC\Retail_sales_Capstone\data\cleaned\customers_cleaned.csv'
+
+df = pd.read_csv(customer_path)
+
+df.drop_duplicates(inplace=True)
+df['age'] = df['age'].fillna(df['age'].mean())  # Fill missing age with mean
+
+# Rename columns
+df.rename(columns={
+    'customer_id': 'Customer_ID',
+    'gender': 'Gender',
+    'signup_date': 'Signup_Date',
+    'region': 'Region'
+}, inplace=True)
+
+df.to_csv(customer_clean_path, index=False)
+
+
+# ------------------------------------------------
+# 3. Return Data Cleaning
+# ------------------------------------------------
+returns_path = r"C:\Users\jagad\OneDrive\Documents\ExcellenC\Retail_sales_Capstone\data\raw\returns.csv"
+returns_clean_path = r"C:\Users\jagad\OneDrive\Documents\ExcellenC\Retail_sales_Capstone\data\cleaned\returns_cleaned.csv"
+
+df = pd.read_csv(returns_path)
+
+df.drop_duplicates(inplace=True)
+
+# Rename columns
+df.rename(columns={
+    'return_id': 'Return_ID',
+    'order_id': 'Order_ID',
+    'return_date': 'Return_Date',
+    'return_reason': 'Return_Reason'
+}, inplace=True)
+
+df.to_csv(returns_clean_path, index=False)
+
+
+# ------------------------------------------------
+# 4. Product Data Cleaning
+# ------------------------------------------------
+products_path = r"C:\Users\jagad\OneDrive\Documents\ExcellenC\Retail_sales_Capstone\data\raw\products.csv"
+products_clean_path = r"C:\Users\jagad\OneDrive\Documents\ExcellenC\Retail_sales_Capstone\data\cleaned\products_cleaned.csv"
+
+df = pd.read_csv(products_path)
+
+df['brand'].fillna('Unknown', inplace=True)
+df.drop_duplicates(inplace=True)
+df.reset_index(drop=True, inplace=True)
+
+# Rename columns
+df.rename(columns={
+    'product_id': 'Product_ID',
+    'product_name': 'Product_Name',
+    'category': 'Category',
+    'brand': 'Brand',
+    'cost_price': 'Cost_Price',
+    'unit_price': 'Unit_Price',
+    'margin_pct': 'Margin_Pct'
+}, inplace=True)
+
+df.to_csv(products_clean_path, index=False)
+
+
+# ------------------------------------------------
+# 5. Sales Data Cleaning
+# ------------------------------------------------
+sales_path = r"C:\Users\jagad\OneDrive\Documents\ExcellenC\Retail_sales_Capstone\data\raw\sales_data.csv"
+sales_clean_path = r"C:\Users\jagad\OneDrive\Documents\ExcellenC\Retail_sales_Capstone\data\cleaned\sales_data_cleaned.csv"
+
+df = pd.read_csv(sales_path)
+
+df.drop_duplicates(inplace=True)
+df.reset_index(drop=True, inplace=True)
+df['store_id'].fillna("0", inplace=True)
+
+# Rename columns
+df.rename(columns={
+    'order_id': 'Order_ID',
+    'order_date': 'Order_Date',
+    'customer_id': 'Customer_ID',
+    'product_id': 'Product_ID',
+    'store_id': 'Store_ID',
+    'sales_channel': 'Sales_Channel',
+    'quantity': 'Quantity',
+    'unit_price': 'Unit_Price',
+    'discount_pct': 'Discount_PCT',
+    'total_amount': 'Total_Amount'
+}, inplace=True)
+
+df.to_csv(sales_clean_path, index=False)
+
+
+
+
